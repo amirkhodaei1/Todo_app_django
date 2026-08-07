@@ -1,47 +1,30 @@
-# =========================
-# Stage 1: Builder
-# =========================
+# Use the official Python 3.12 slim image
+FROM python:3.12-slim
 
-FROM python:3.13-slim AS builder
-
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# ۱. ریشه پروژه را /app قرار می‌دهیم تا کپی فایل‌ها درست انجام شود
 WORKDIR /app
 
-RUN python -m venv /opt/venv
+# Upgrade pip
+RUN python -m pip install --upgrade pip
 
-ENV PATH="/opt/venv/bin:$PATH"
-
-RUN pip install --upgrade pip
-
+# Copy only the requirements file first
 COPY requirements.txt .
 
+# Install project dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy the project source code into /app
+COPY . .
 
-# =========================
-# Stage 2: Production
-# =========================
+# ۲. اکنون پوشه کاری را به core تغییر می‌دهیم (محل manage.py)
+WORKDIR /app/todo
 
-FROM python:3.13-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV PATH="/opt/venv/bin:$PATH"
-
-RUN useradd -m -r appuser \
-    && mkdir /app \
-    && chown -R appuser:appuser /app
-
-COPY --from=builder /opt/venv /opt/venv
-
-WORKDIR /app
-
-COPY --chown=appuser:appuser . .
-
-USER appuser
-
+# Expose Django development server port
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "--chdir", "todo", "todo.wsgi:application"]
+# Default command (کوتیشن اضافی آخر حذف شد)
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

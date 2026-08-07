@@ -1,13 +1,12 @@
 services:
-  django-web:
+  backend:
     build: .
-    container_name: django-docker
+    working_dir: /app/todo
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
     ports:
       - "8000:8000"
-    env_file:
-      - .env
     environment:
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      DEBUG: ${DEBUG}
-      DJANGO_LOGLEVEL: ${DJANGO_LOGLEVEL}
-      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+      SECRET_KEY: test
+      DEBUG: "True"
