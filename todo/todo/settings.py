@@ -20,12 +20,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+# SECURITY WARNING: keep the secret key used in production secret!
+# هم SECRET_KEY و هم DJANGO_SECRET_KEY را پشتیبانی می‌کند
+SECRET_KEY = os.environ.get("SECRET_KEY") or os.environ.get(
+    "DJANGO_SECRET_KEY", "django-insecure-default-key"
+)
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG", default=0))
+# بررسی صحیح مقدار بولین از روی رشته
+DEBUG = os.environ.get("DEBUG", "True").lower() in ("true", "1", "t")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","127.0.0.1").split(",")
-
+# افزودن localhost و 0.0.0.0 به هادست‌های مجاز برای محیط داکر
+ALLOWED_HOSTS =['*']
+#  os.environ.get(
+#     "DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,0.0.0.0,backend"
+# ).split(",")
 
 # Application definition
 
@@ -36,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'todo_app.apps.TodoAppConfig'
 ]
 
 MIDDLEWARE = [

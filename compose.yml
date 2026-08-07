@@ -10,3 +10,6 @@ services:
     environment:
       SECRET_KEY: test
       DEBUG: "True"
+      PYTHONPATH: /app/todo
+    stdin_open: true
+    tty: true

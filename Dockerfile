@@ -2,29 +2,25 @@
 FROM python:3.12-slim
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# ۱. ریشه پروژه را /app قرار می‌دهیم تا کپی فایل‌ها درست انجام شود
+# Set initial workspace to root app directory
 WORKDIR /app
 
-# Upgrade pip
-RUN python -m pip install --upgrade pip
-
-# Copy only the requirements file first
+# Copy requirements and install dependencies in one layer to improve caching
 COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Install project dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the project source code into /app
+# Copy source code
 COPY . .
 
-# ۲. اکنون پوشه کاری را به core تغییر می‌دهیم (محل manage.py)
+# Set working directory to Django core folder (containing manage.py)
 WORKDIR /app/todo
 
-# Expose Django development server port
+# Expose server port
 EXPOSE 8000
 
-# Default command (کوتیشن اضافی آخر حذف شد)
+# Default command
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
