@@ -1,0 +1,127 @@
+<!-- todo_list.html -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت کارها | Todo App</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Vazirmatn Persian Font -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Background Decorative Gradients -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/2 -left-40 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl"></div>
+    </div>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <!-- Header Section -->
+        <header class="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl">
+            <div class="space-y-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                        <i class="fa-solid fa-list-check text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">لیست کارهای انجام‌شده</h1>
+                        <p class="text-sm text-slate-400">کارهای نهایی و تکمیل‌شده حساب کاربری شما</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats & Quick Status -->
+            <div class="flex items-center gap-3 self-start md:self-auto">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    {{ todos|length }} کار تکمیل شده
+                </span>
+            </div>
+        </header>
+
+        <!-- Todo List Grid -->
+        <div class="space-y-4">
+            {% for todo in todos %}
+                <article class="group relative bg-slate-900/40 hover:bg-slate-900/80 border border-slate-800/60 hover:border-slate-700/80 rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-0.5">
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                        
+                        <!-- Content -->
+                        <div class="flex items-start gap-4 flex-1">
+                            <!-- Status Check Box -->
+                            <div class="mt-1 flex-shrink-0 w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-sm">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+
+                            <div class="space-y-2 flex-1">
+                                <div class="flex items-center gap-3 flex-wrap">
+                                    <h2 class="text-lg font-bold text-slate-100 group-hover:text-indigo-300 transition-colors">
+                                        {{ todo.title }}
+                                    </h2>
+                                    <span class="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700/50">
+                                        تکمیل‌شده
+                                    </span>
+                                </div>
+                                <p class="text-slate-300/90 text-sm leading-relaxed whitespace-pre-line">
+                                    {{ todo.detail }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Metadata Footer / Sidebar -->
+                        <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-800/60 text-xs text-slate-400 shrink-0">
+                            <!-- User Badge -->
+                            <div class="flex items-center gap-2 bg-slate-800/50 px-3 py-1.5 rounded-xl border border-slate-700/40">
+                                <i class="fa-regular fa-user text-indigo-400"></i>
+                                <span class="font-medium text-slate-300">
+                                    {{ todo.user.get_full_name|default:todo.user.username }}
+                                </span>
+                            </div>
+
+                            <!-- Dates -->
+                            <div class="flex items-center gap-1.5 text-slate-400" title="تاریخ ثبت">
+                                <i class="fa-regular fa-clock text-slate-500"></i>
+                                <time datetime="{{ todo.created_date|date:'Y-m-d H:i' }}">
+                                    {{ todo.created_date|date:"Y/m/d - H:i" }}
+                                </time>
+                            </div>
+                        </div>
+
+                    </div>
+                </article>
+            {% empty %}
+                <!-- Empty State -->
+                <div class="text-center py-16 px-4 bg-slate-900/30 border border-dashed border-slate-800 rounded-3xl">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-500">
+                        <i class="fa-solid fa-inbox text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-200 mb-1">هیچ کاری یافت نشد</h3>
+                    <p class="text-sm text-slate-400 max-w-sm mx-auto">
+                        در حال حاضر هیچ کار تکمیل‌شده‌ای برای نمایش وجود ندارد.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+
+    </main>
+
+</body>
+</html>
