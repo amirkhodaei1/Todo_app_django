@@ -1,0 +1,122 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود به حساب کاربری</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Vazirmatn Persian Font -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen antialiased flex items-center justify-center p-4 selection:bg-indigo-500 selection:text-white">
+
+    <!-- Background Decorative Gradients -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl"></div>
+    </div>
+
+    <main class="w-full max-w-md">
+        <!-- Login Card -->
+        <div class="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-indigo-500/5">
+
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-user-lock text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-extrabold text-white tracking-tight mb-2">ورود به حساب کاربری</h1>
+                <p class="text-sm text-slate-400">اطلاعات کاربری خود را جهت ورود وارد نمایید</p>
+            </div>
+
+            <!-- Error Messages -->
+            {% if form.errors %}
+                <div class="mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm space-y-1">
+                    <div class="flex items-center gap-2 font-semibold mb-1">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>خطا در ورود:</span>
+                    </div>
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                            <p class="text-xs text-rose-300/90">{{ error }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-xs text-rose-300/90">نام کاربری یا رمز عبور وارد شده اشتباه است.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <!-- Form -->
+            <form method="post" action="" class="space-y-5">
+                {% csrf_token %}
+                
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                {% endif %}
+
+                <!-- Username Field -->
+                <div class="space-y-2">
+                    <label for="id_username" class="block text-sm font-medium text-slate-300">
+                        نام کاربری
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-500">
+                            <i class="fa-solid fa-user text-sm"></i>
+                        </div>
+                        <input type="text" name="username" id="id_username" required autofocus
+                            class="w-full pr-10 pl-4 py-3 bg-slate-800/50 border border-slate-700/80 rounded-2xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200"
+                            placeholder="نام کاربری خود را وارد کنید">
+                    </div>
+                    {% if form.username.errors %}
+                        <p class="text-xs text-rose-400 mt-1">{{ form.username.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Password Field -->
+                <div class="space-y-2">
+                    <label for="id_password" class="block text-sm font-medium text-slate-300">
+                        رمز عبور
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-500">
+                            <i class="fa-solid fa-key text-sm"></i>
+                        </div>
+                        <input type="password" name="password" id="id_password" required
+                            class="w-full pr-10 pl-4 py-3 bg-slate-800/50 border border-slate-700/80 rounded-2xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200"
+                            placeholder="••••••••">
+                    </div>
+                    {% if form.password.errors %}
+                        <p class="text-xs text-rose-400 mt-1">{{ form.password.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold text-sm rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mt-2">
+                    <span>ورود به سیستم</span>
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                </button>
+            </form>
+
+        </div>
+    </main>
+
+</body>
+</html>
