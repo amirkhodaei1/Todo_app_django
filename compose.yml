@@ -1,7 +1,7 @@
 services:
   backend:
     build: .
-    working_dir: /app/todo
+    working_dir: /app/todo  
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app

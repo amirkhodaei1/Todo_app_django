@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "todo_app.apps.TodoAppConfig",
     "accounts.apps.AccountsConfig",
+    "rest_framework",
+    "django_filters",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -142,7 +145,7 @@ STATIC_ROOT = BASE_DIR / "static"
 MEDIA_ROOT = BASE_DIR / "media"
 STATICFILES_DIRS = [BASE_DIR / "staticfiles"]
 AUTH_USER_MODEL = "accounts.User"
-LOGIN_URL = '/accounts/login'
+LOGIN_URL = "/accounts/login"
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
