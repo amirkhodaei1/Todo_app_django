@@ -1,8 +1,9 @@
-import pytest
-from rest_framework.test import APIClient
-from django.urls import reverse
 from datetime import datetime
+
+import pytest
 from accounts.models import User
+from django.urls import reverse
+from rest_framework.test import APIClient
 
 # class TestTodoApi:
 #     client = APIClient()

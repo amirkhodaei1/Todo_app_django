@@ -1,35 +1,28 @@
-from rest_framework_simplejwt.tokens import RefreshToken
-
-from ...models import User
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .serializers import (
-    RegistrationSerializer,
-    CustomAuthTokenSerializer,
-    CustomTokenObtainPairSerializer,
-    ChangePasswordSerialier,
-    ActivationResendSerializer,
-)
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from rest_framework.views import APIView
-from rest_framework_simplejwt.views import TokenObtainPairView
+import jwt
+from django.conf import settings
 from django.shortcuts import get_object_or_404
-from ..utils import EmailThread
+from jwt.exceptions import ExpiredSignatureError, InvalidSignatureError
 
 # from django.core.mail import send_mail
-from mail_templated import send_mail, EmailMessage
-from django.conf import settings
-import jwt
-from jwt.exceptions import ExpiredSignatureError, InvalidSignatureError
-from datetime import datetime, timedelta
-
-
-from mail_templated import EmailMessage  # 👈 ایمپورت از mail_templated
+from mail_templated import EmailMessage
 from rest_framework import generics, status
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+from ...models import User
+from ..utils import EmailThread
+from .serializers import (
+    ActivationResendSerializer,
+    ChangePasswordSerialier,
+    CustomAuthTokenSerializer,
+    CustomTokenObtainPairSerializer,
+    RegistrationSerializer,
+)
 
 
 class RegistrationApiView(generics.GenericAPIView):
@@ -82,7 +75,9 @@ class CustomObtainAuthToken(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key, "user_id": user.pk, "username": user.username})
+        return Response(
+            {"token": token.key, "user_id": user.pk, "username": user.username}
+        )
 
 
 class CustomDiscardAuthToken(APIView):

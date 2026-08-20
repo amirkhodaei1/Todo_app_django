@@ -1,13 +1,12 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic.base import TemplateView, RedirectView
-from django.views.generic import ListView, DetailView, FormView, CreateView,UpdateView,DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
 from .forms import TodoForm
 from .models import Todo
-from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 
 
 # Create your views here.
-class TodoListView(LoginRequiredMixin,ListView):
+class TodoListView(LoginRequiredMixin, ListView):
     ordering = "-created_date"
     context_object_name = "todos"
     queryset = Todo.objects.all()
@@ -26,7 +25,6 @@ class TodoCreateView(LoginRequiredMixin, CreateView):
 
 
 class TodoEditView(LoginRequiredMixin, UpdateView):
-
     model = Todo
 
     form_class = TodoForm
@@ -45,7 +43,6 @@ class TodoEditView(LoginRequiredMixin, UpdateView):
 
 
 class TodoDeleteView(LoginRequiredMixin, DeleteView):
-
     model = Todo
     success_url = "/"
 

@@ -1,16 +1,24 @@
 from django.urls import path
-from . import views
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
 
+from . import views
+
 urlpatterns = [
     path("registration/", views.RegistrationApiView.as_view(), name="registration"),
     path("test-email/", views.TestEmailSend.as_view(), name="test_email"),
-    path("activation/confirm/<str:token>", views.ActivationApiView.as_view(), name="test_email"),
-    path("activation/confirm/", views.ActivationResendApiView.as_view(), name="test_email"),
-    
+    path(
+        "activation/confirm/<str:token>",
+        views.ActivationApiView.as_view(),
+        name="test_email",
+    ),
+    path(
+        "activation/confirm/",
+        views.ActivationResendApiView.as_view(),
+        name="test_email",
+    ),
     path(
         "password-change/",
         views.ChangePasswordApiView.as_view(),

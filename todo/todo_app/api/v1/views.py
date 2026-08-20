@@ -1,13 +1,13 @@
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+
+from ...models import Todo
 from .paginations import DefaultPagination
 from .permissions import isOwnerOrReadOnly
-from ...models import Todo
 from .serializers import TodoSerializer
 
 
@@ -28,4 +28,3 @@ class TodoModelViewSet(viewsets.ModelViewSet):
     search_fields = ["title", "content"]
     ordering_fields = ["published_date"]
     pagination_class = DefaultPagination
-

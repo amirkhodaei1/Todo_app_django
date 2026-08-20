@@ -1,10 +1,11 @@
-from rest_framework import serializers
-from ...models import User
+from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
-from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from ...models import User
 
 User = get_user_model()
 
@@ -92,7 +93,6 @@ class ChangePasswordSerialier(serializers.Serializer):
         return super().validate(attrs)
 
 
-
 class ActivationResendSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
 
@@ -104,5 +104,5 @@ class ActivationResendSerializer(serializers.Serializer):
             raise serializers.ValidationError({"detail": "user dose not exist"})
         # if user_obj.is_verified:
         #     raise serializers.ValidationError({"detail": "user is already activated"})
-        attrs['user']=user_obj
+        attrs["user"] = user_obj
         return super().validate(attrs)

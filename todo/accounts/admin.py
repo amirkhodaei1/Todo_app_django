@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+
 from .models import User
 
 
@@ -7,8 +8,8 @@ from .models import User
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     model = User
-    list_display = ("username", "is_superuser", "is_active","is_verified")
-    list_filter = ("username", "is_superuser", "is_active","is_verified")
+    list_display = ("username", "is_superuser", "is_active", "is_verified")
+    list_filter = ("username", "is_superuser", "is_active", "is_verified")
     search_fields = ("username",)
     ordering = ("username",)
     fieldsets = (
@@ -21,7 +22,7 @@ class CustomUserAdmin(UserAdmin):
         (
             "permmissions",
             {
-                "fields": ("is_staff", "is_active", "is_superuser","is_verified"),
+                "fields": ("is_staff", "is_active", "is_superuser", "is_verified"),
             },
         ),
         (
@@ -48,8 +49,7 @@ class CustomUserAdmin(UserAdmin):
                     "password2",
                     "is_staff",
                     "is_active",
-                    "is_verified"
-                    "is_superuser",
+                    "is_verifiedis_superuser",
                 ),
             },
         ),

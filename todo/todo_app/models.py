@@ -1,6 +1,7 @@
+from accounts.models import User
 from django.db import models
 from django.urls import reverse
-from accounts.models import User
+
 
 # Create your models here.
 class Todo(models.Model):
