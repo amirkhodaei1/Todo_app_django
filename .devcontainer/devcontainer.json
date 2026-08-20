@@ -1,22 +1,28 @@
 {
-    "name": "todo_app_django",
-    "dockerComposeFile": "../compose.yml",
-    "service": "backend",
-    "workspaceFolder": "/app",
-    "shutdownAction": "stopCompose",
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "python.defaultInterpreterPath": "/usr/local/bin/python",
-                "python.analysis.extraPaths": [
-                    "/app/todo"
-                ]
-            },
-            "extensions": [
-                "ms-python.python",
-                "ms-python.vscode-pylance",
-                "batisteo.vscode-django"
-            ]
+  "name": "Todo App DevContainer",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "backend",
+  "workspaceFolder": "/app",
+  // "remoteUser": "vscode",
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "editor.formatOnSave": true,
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
         }
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "batisteo.vscode-django",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-azuretools.vscode-docker"
+      ]
     }
+  },
+  "postCreateCommand": "sudo chown -R vscode:vscode /app"
 }

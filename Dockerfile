@@ -1,26 +1,29 @@
 # Use the official Python 3.12 slim image
 FROM python:3.12-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
 
-# Set initial workspace to root app directory
+# ۱. نصب ابزارهای ضروری لینوکس (برای حل خطای Dev Containers و ساخت پکیج‌ها)
+
+# ۲. تعیین پوشه کاری اولیه
 WORKDIR /app
 
-# Copy requirements and install dependencies in one layer to improve caching
-COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Upgrade pip
+RUN python -m pip install --upgrade pip
 
-# Copy source code
+# Copy only the requirements file first for layer caching
+COPY requirements.txt .
+
+# Install project dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the project source code into /app
 COPY . .
 
-# Set working directory to Django core folder (containing manage.py)
+# ۳. تغییر پوشه کاری به core (محل manage.py)
 WORKDIR /app/todo
-
-# Expose server port
+    
+# Expose Django development server port
 EXPOSE 8000
 
-# Default command
+# Default command (کاراکتر اضافی ' از انتهای خط حذف شد)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

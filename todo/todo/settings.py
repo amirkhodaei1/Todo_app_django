@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,13 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: keep the secret key used in production secret!
 # هم SECRET_KEY و هم DJANGO_SECRET_KEY را پشتیبانی می‌کند
-SECRET_KEY = os.environ.get("SECRET_KEY") or os.environ.get(
-    "DJANGO_SECRET_KEY", "django-insecure-default-key"
-)
+SECRET_KEY = config("SECRET_KEY", default="test")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# بررسی صحیح مقدار بولین از روی رشته
-DEBUG = os.environ.get("DEBUG", "True").lower() in ("true", "1", "t")
+DEBUG = config("DEBUG", cast=bool, default=True)
+
 
 # افزودن localhost و 0.0.0.0 به هادست‌های مجاز برای محیط داکر
 ALLOWED_HOSTS = ["*"]
@@ -46,11 +45,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "todo_app.apps.TodoAppConfig",
-    "accounts.apps.AccountsConfig",
+    # Local Apps
+    "todo_app",
+    "accounts",
+    # Third-party Apps
     "rest_framework",
+    "rest_framework.authtoken",
     "django_filters",
-    "drf_spectacular",
+    "drf_yasg",  # 👈 جایگزین drf_yasg شد
+    "rest_framework_simplejwt",
+    "mail_templated",
+    "djoser",
 ]
 
 MIDDLEWARE = [
@@ -134,11 +139,6 @@ STATIC_URL = "static/"
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    "default": {
-        "BACKEND": "django.core.mail.backends.console.EmailBackend",
-    },
-}
 STATIC_URL = "static/"
 MEDIA_URL = "media/"
 STATIC_ROOT = BASE_DIR / "static"
@@ -149,3 +149,20 @@ LOGIN_URL = "/accounts/login"
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+}
+
+# Email Configuration
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp4dev"
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False

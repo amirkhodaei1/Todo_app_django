@@ -3,7 +3,6 @@ from ...models import Todo
 from accounts.models import User
 
 
-
 class TodoSerializer(serializers.ModelSerializer):
     snippet = serializers.ReadOnlyField(source="get_snippet")
     relative_url = serializers.URLField(source="get_absolute_api_url", read_only=True)
@@ -22,7 +21,7 @@ class TodoSerializer(serializers.ModelSerializer):
             "absolute_url",
             "created_date",
         ]
-        read_only_fields = ["author"]
+        read_only_fields = ["user"]
         # read_only_fields = ["detail"]
 
     # id=serializers.IntegerField()
