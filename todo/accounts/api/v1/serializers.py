@@ -5,8 +5,6 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from ...models import User
-
 User = get_user_model()
 
 
